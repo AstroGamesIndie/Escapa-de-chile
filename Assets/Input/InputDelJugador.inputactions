@@ -2,7 +2,7 @@
     "name": "InputDelJugador",
     "maps": [
         {
-            "name": "Jugardor",
+            "name": "Jugador",
             "id": "07c9d6fe-1490-4516-b9da-dbf819d8e958",
             "actions": [
                 {
@@ -27,6 +27,15 @@
                     "name": "Atacar",
                     "type": "Button",
                     "id": "46adb561-7d8d-4e69-8d58-57336bdd051b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "2e30bc10-b7ea-4f4b-83a4-974dcded1745",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -141,6 +150,28 @@
                     "processors": "",
                     "groups": "Control/Mando",
                     "action": "Atacar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "72dc2aea-f1f8-43c0-81f1-9e588af40828",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Teclado",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c46a1efb-a6e5-419d-8780-de19d6d160a6",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Control/Mando",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

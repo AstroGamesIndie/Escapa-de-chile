@@ -399,7 +399,7 @@ Transform:
   m_GameObject: {fileID: 1038041845}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.3511, y: 3.3511, z: 3.3511}
+  m_LocalScale: {x: 3.35, y: 3.35, z: 3.35}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 870677215}
@@ -547,11 +547,35 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1212131089}
+        m_TargetAssemblyTypeName: MovimientoBasico, Assembly-CSharp
+        m_MethodName: Mover
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e77f501f-8ee9-479d-8919-368d865bf733
     m_ActionName: Jugardor/Moverse[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/DualShock4GamepadHID/leftStick]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1212131089}
+        m_TargetAssemblyTypeName: MovimientoBasico, Assembly-CSharp
+        m_MethodName: Saltar
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: c24d72a4-b6a6-41de-b523-6263e9b9fb4d
     m_ActionName: Jugardor/Saltar[/Keyboard/space,/DualShock4GamepadHID/buttonSouth]
   - m_PersistentCalls:
@@ -566,9 +590,13 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 3fd84857-e09c-49d3-a1d4-7f60fe7d7722
     m_ActionName: IU/Rechazar[/Keyboard/backspace,/DualShock4GamepadHID/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2e30bc10-b7ea-4f4b-83a4-974dcded1745
+    m_ActionName: Jugador/Dash[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Teclado
-  m_DefaultActionMap: Jugardor
+  m_DefaultActionMap: Jugador
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!61 &1212131088
@@ -603,7 +631,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.19134367, y: -0.16742575}
+  m_Offset: {x: 0.1913437, y: -0.23886305}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -614,7 +642,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.68109393, y: 1.3348515}
+  m_Size: {x: 0.44296974, y: 1.1205395}
   m_EdgeRadius: 0
 --- !u!114 &1212131089
 MonoBehaviour:
@@ -628,10 +656,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58fc5680c27fb349a23a04e3f9f131e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  checkeoDePiso: {fileID: 0}
+  rb: {fileID: 1212131085}
+  chequeoDePiso: {fileID: 870677215}
+  anim: {fileID: 0}
   velocidad: 7
-  poderDelSalto: 16
+  poderDelSalto: 10
   queEsPiso:
     serializedVersion: 2
     m_Bits: 64
