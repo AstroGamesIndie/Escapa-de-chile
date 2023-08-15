@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,14 +19,45 @@ public class MovimientoBasico : MonoBehaviour
     public float velocidad = 7;
 
     [Tooltip("La fuerza del salto que hace el jugador.")]
-    public float poderDelSalto = 16;
+    public float poderDelSalto = 10;
 
     [Tooltip("Que layers o capas se cuentan como piso, solo para chequear si el jugador puede saltar.")]
     public LayerMask queEsPiso;
 
+    [Header("Dash")]
+    [Tooltip("Determina si el jugador podra dashear.")]
+    public bool puedeDashear = false;
+
+    public float fuerzaDelDash = 6f;
+
+    [Header("WallSide y jump")]
+    [SerializeField] bool seEstaDeslizandoEnLaPared;
+    [SerializeField] float velocidadDeDeslizoDePared = 2f;
+    [SerializeField] LayerMask queEsPared;
+    public Transform chequeoDePared;
+
+    private float vertical;
     private float horizontal;
     private bool estaMirandoALaDerecha = true;
 
+    bool EstaEnElPiso()
+     {
+        return Physics2D.OverlapCircle(chequeoDePiso.position, .2f, queEsPiso);
+     }
+
+    bool EstaEnPared()
+    {
+        return Physics2D.OverlapCircle(chequeoDePared.position, 0.2f, queEsPared);
+    }
+
+    void WallSlide()
+    {
+        if (EstaEnPared() && horizontal != 0f) 
+        {
+            seEstaDeslizandoEnLaPared = true;
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -velocidadDeDeslizoDePared, float.MaxValue));
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -40,6 +72,22 @@ public class MovimientoBasico : MonoBehaviour
         {
             Flip();
         }
+
+        if(!puedeDashear && EstaEnElPiso())
+        {
+            puedeDashear = true;
+        }
+       
+        if(EstaEnElPiso())
+        {
+            anim.SetBool("Cayendo", false);
+        }
+        else if(!EstaEnElPiso())
+        {
+            anim.SetBool("Cayendo", true);
+        }
+
+        WallSlide();
     }
 
     public void Saltar(InputAction.CallbackContext ctx)
@@ -47,19 +95,17 @@ public class MovimientoBasico : MonoBehaviour
         if(ctx.performed && EstaEnElPiso())
         {
             rb.velocity = new Vector2(rb.velocity.x, poderDelSalto);
+            anim.SetBool("saltando", true);
         }
 
         if(ctx.canceled && rb.velocity.y > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * .5f);
+            anim.SetBool("saltando", false);
         }
     }
 
-    bool EstaEnElPiso()
-    {
-        return Physics2D.OverlapCircle(chequeoDePiso.position, .2f, queEsPiso);
-    }
-
+   
     private void Flip()
     {
         estaMirandoALaDerecha = !estaMirandoALaDerecha;
@@ -71,6 +117,7 @@ public class MovimientoBasico : MonoBehaviour
     public void Mover(InputAction.CallbackContext ctx)
     {
         horizontal = ctx.ReadValue<Vector2>().x;
+        vertical = ctx.ReadValue<Vector2>().y;
     }
 
     private void OnDrawGizmos()
@@ -87,4 +134,33 @@ public class MovimientoBasico : MonoBehaviour
 
         Gizmos.DrawWireSphere(chequeoDePiso.position, .2f);
     }
+
+    private void FixedUpdate()
+    {
+        if(horizontal < 0f || horizontal > 0f)
+        {
+            anim.SetBool("Caminando", true);
+        }
+        else if(horizontal == 0f)
+        {
+            anim.SetBool("Caminando", false);
+        }
+    }
+
+    public void Dash(InputAction.CallbackContext ctx)
+    {
+        if(ctx.performed)
+        {
+            if(puedeDashear) 
+            { 
+                Vector2 dir = new Vector2(horizontal, vertical);
+                rb.velocity =new Vector2(rb.velocity.x + dir.x * fuerzaDelDash * 3, rb.velocity.y + dir.y * fuerzaDelDash);
+                puedeDashear = false;
+            }
+            if (!puedeDashear)
+                return;
+        }
+    }
+
+
 }
