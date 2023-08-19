@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Photon.Pun;
 
 public class MovimientoBasico : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class MovimientoBasico : MonoBehaviour
 
     [Tooltip("El componente que da las animaciones al jugador.")]
     public Animator anim;
+
+    PhotonView view;
 
     [Header("Valores relacionados al movimiento")]
     [Tooltip("La velocidad del jugador al caminar.")]
@@ -40,59 +43,52 @@ public class MovimientoBasico : MonoBehaviour
     private float horizontal;
     private bool estaMirandoALaDerecha = true;
 
+    private void Start()
+    {
+        view = GetComponent<PhotonView>();
+    }
+
     bool EstaEnElPiso()
      {
         return Physics2D.OverlapCircle(chequeoDePiso.position, .2f, queEsPiso);
      }
 
-    bool EstaEnPared()
-    {
-        return Physics2D.OverlapCircle(chequeoDePared.position, 0.2f, queEsPared);
-    }
-
-    void WallSlide()
-    {
-        if (EstaEnPared() && horizontal != 0f) 
-        {
-            seEstaDeslizandoEnLaPared = true;
-            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -velocidadDeDeslizoDePared, float.MaxValue));
-        }
-    }
-
     // Update is called once per frame
     void Update()
     {
-        rb.velocity = new Vector2(horizontal * velocidad, rb.velocity.y);
-        if(!estaMirandoALaDerecha && horizontal > 0f)
+        if (view.IsMine)
         {
-            Flip();
-        }
+            rb.velocity = new Vector2(horizontal * velocidad, rb.velocity.y);
 
-        if (estaMirandoALaDerecha && horizontal < 0f)
-        {
-            Flip();
-        }
+            if (!estaMirandoALaDerecha && horizontal > 0f)
+            {
+                Flip();
+            }
 
-        if(!puedeDashear && EstaEnElPiso())
-        {
-            puedeDashear = true;
-        }
-       
-        if(EstaEnElPiso())
-        {
-            anim.SetBool("Cayendo", false);
-        }
-        else if(!EstaEnElPiso())
-        {
-            anim.SetBool("Cayendo", true);
-        }
+            if (estaMirandoALaDerecha && horizontal < 0f)
+            {
+                Flip();
+            }
 
-        WallSlide();
+            if (!puedeDashear && EstaEnElPiso())
+            {
+                puedeDashear = true;
+            }
+
+            if (EstaEnElPiso())
+            {
+                anim.SetBool("Cayendo", false);
+            }
+            else if (!EstaEnElPiso())
+            {
+                anim.SetBool("Cayendo", true);
+            }
+        }
     }
 
     public void Saltar(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed && EstaEnElPiso())
+        if(ctx.performed && EstaEnElPiso() && view.IsMine)
         {
             rb.velocity = new Vector2(rb.velocity.x, poderDelSalto);
             anim.SetBool("saltando", true);
@@ -115,9 +111,9 @@ public class MovimientoBasico : MonoBehaviour
     }
 
     public void Mover(InputAction.CallbackContext ctx)
-    {
+    { 
         horizontal = ctx.ReadValue<Vector2>().x;
-        vertical = ctx.ReadValue<Vector2>().y;
+        vertical = ctx.ReadValue<Vector2>().y;    
     }
 
     private void OnDrawGizmos()
@@ -161,6 +157,4 @@ public class MovimientoBasico : MonoBehaviour
                 return;
         }
     }
-
-
 }
